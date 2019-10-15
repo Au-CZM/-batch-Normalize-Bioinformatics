@@ -1,0 +1,11 @@
+# batch-normalization
+rownames(rt)=rt[,1]
+exp=rt[,2:ncol(rt)]
+dimnames=list(rownames(exp),colnames(exp))
+data=matrix(as.numeric(as.matrix(exp)),nrow=nrow(exp),dimnames=dimnames)
+batchType=c(rep( , ),rep( , ))
+modType=c(rep("normal", ),rep("OA", ),rep("normal", ),rep("OA", ))
+mod = model.matrix(~as.factor(modType))
+outTab=ComBat(data, batchType, mod, par.prior=TRUE)
+outTab=rbind(geneNames=colnames(outTab),outTab)
+write.table(outTab,file="normalize.txt",sep="\t",quote=F,col.names=F)
