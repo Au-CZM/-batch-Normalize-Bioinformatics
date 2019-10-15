@@ -1,4 +1,6 @@
 # batch-normalization
+library(sva)
+library(limma)
 rownames(rt)=rt[,1]
 exp=rt[,2:ncol(rt)]
 dimnames=list(rownames(exp),colnames(exp))
