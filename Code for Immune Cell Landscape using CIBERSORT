@@ -16,19 +16,3 @@ ytick1 = c(0,ytick2[-length(ytick2)])
 #text(par('usr')[2],(ytick1+ytick2)/2,rownames(data),cex=0.6,adj=0)
 legend(par('usr')[2]*0.97,par('usr')[4],legend=rownames(data),col=col,pch=15,bty="n",cex=0.8)
 dev.off()
-
-###corHeatmap
-rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)
-
-library(corrplot)
-pdf("corHeatmap.pdf",height=13,width=13)  
-corrplot(corr=cor(rt),
-         method = "color",
-         order = "hclust",
-         tl.col="black",
-         addCoef.col = "black",
-         number.cex = 0.8,
-         col=colorRampPalette(c("blue", "white", "red"))(50),
-         )
-dev.off()
-
