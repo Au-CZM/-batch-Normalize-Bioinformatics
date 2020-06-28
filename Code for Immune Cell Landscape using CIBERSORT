@@ -32,21 +32,3 @@ corrplot(corr=cor(rt),
          )
 dev.off()
 
-###pHeatmap
-rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)
-rt=t(rt)
-
-library(pheatmap)
-Type=c(rep("normal", ),rep("abnormal", ))
-names(Type)=colnames(rt)
-Type=as.data.frame(Type)
-
-pdf("heatmap.pdf",height=5,width=10)
-pheatmap(rt, 
-         annotation=Type, 
-         color = colorRampPalette(c("green", "black", "red"))(50),
-         cluster_cols = ,
-         fontsize =  ,
-         fontsize_row= ,
-         fontsize_col= )
-dev.off()
