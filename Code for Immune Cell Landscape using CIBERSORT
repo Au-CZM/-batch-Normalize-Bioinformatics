@@ -37,7 +37,7 @@ rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)
 rt=t(rt)
 
 library(pheatmap)
-Type=c(rep("con", ),rep("OA", ))
+Type=c(rep("normal", ),rep("abnormal", ))
 names(Type)=colnames(rt)
 Type=as.data.frame(Type)
 
