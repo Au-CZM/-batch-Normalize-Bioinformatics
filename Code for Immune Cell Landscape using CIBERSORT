@@ -48,5 +48,5 @@ pheatmap(rt,
          cluster_cols = ,
          fontsize =  ,
          fontsize_row= ,
-         fontsize_col=8)
+         fontsize_col= )
 dev.off()
