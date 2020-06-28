@@ -1,0 +1,84 @@
+###Barplot
+
+data <- read.table(input,header=T,sep="\t",check.names=F,row.names=1)
+data=t(data)
+col=rainbow(nrow(data),s=0.7,v=0.7)
+
+pdf(outpdf,height=6,width=10)
+par(las=1,mar=c(8,5,4,13))
+a1 = barplot(data,col=col,yaxt="n",ylab="Relative Percent",xaxt="n")
+a2=axis(2,tick=F,labels=F)
+axis(2,a2,paste0(a2*100,"%"))
+axis(1,a1,labels=F)
+par(srt=60,xpd=T);text(a1,-0.02,colnames(data),adj=1,cex=1);par(srt=0)
+ytick2 = cumsum(data[,ncol(data)])
+ytick1 = c(0,ytick2[-length(ytick2)])
+#text(par('usr')[2],(ytick1+ytick2)/2,rownames(data),cex=0.6,adj=0)
+legend(par('usr')[2]*0.97,par('usr')[4],legend=rownames(data),col=col,pch=15,bty="n",cex=0.8)
+dev.off()
+
+###Vioplot
+
+library(vioplot) 
+normal=6                                                        
+tumor=6                                                            
+
+rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)   
+pdf("vioplot.pdf",height=8,width=15)             
+par(las=1,mar=c(10,6,3,3))
+x=c(1:ncol(rt))
+y=c(1:ncol(rt))
+plot(x,y,
+     xlim=c(0,63),ylim=c(min(rt),max(rt)+0.02),
+     main="",xlab="", ylab="Fraction",
+     pch=21,
+     col="white",
+     xaxt="n")
+
+for(i in 1:ncol(rt)){
+  normalData=rt[1:normal,i]
+  tumorData=rt[(normal+1):(normal+tumor),i]
+  vioplot(normalData,at=3*(i-1),lty=1,add = T,col = 'blue')
+  vioplot(tumorData,at=3*(i-1)+1,lty=1,add = T,col = 'red')
+  wilcoxTest=wilcox.test(normalData,tumorData)
+  p=round(wilcoxTest$p.value,3)
+  mx=max(c(normalData,tumorData))
+  lines(c(x=3*(i-1)+0.2,x=3*(i-1)+0.8),c(mx,mx))
+  text(x=3*(i-1)+0.5, y=mx+0.02??labels=ifelse(p<0.001, paste0("p<0.001"), paste0("p=",p)), cex = 0.8)
+  text(seq(1,64,3),-0.03,xpd = NA,labels=colnames(rt),cex = 1,srt = 45,pos=2)
+}
+dev.off()
+
+###corHeatmap
+rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)
+
+library(corrplot)
+pdf("corHeatmap.pdf",height=13,width=13)  
+corrplot(corr=cor(rt),
+         method = "color",
+         order = "hclust",
+         tl.col="black",
+         addCoef.col = "black",
+         number.cex = 0.8,
+         col=colorRampPalette(c("blue", "white", "red"))(50),
+         )
+dev.off()
+
+###pHeatmap
+rt=read.table(input,sep="\t",header=T,row.names=1,check.names=F)
+rt=t(rt)
+
+library(pheatmap)
+Type=c(rep("con",6),rep("treat",6))
+names(Type)=colnames(rt)
+Type=as.data.frame(Type)
+
+pdf("heatmap.pdf",height=5,width=10)
+pheatmap(rt, 
+         annotation=Type, 
+         color = colorRampPalette(c("green", "black", "red"))(50),
+         cluster_cols =F,
+         fontsize = 8,
+         fontsize_row=7,
+         fontsize_col=8)
+dev.off()
